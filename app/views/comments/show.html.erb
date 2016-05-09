@@ -1,0 +1,27 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  Article:
+  <%= @comment.article_id %>
+</p>
+
+<p>
+  Body:
+  <%= @comment.body %>
+</p>
+
+<h2>Comments</h2>
+<div id="comments">
+	<% @article.comments.each do |coment| %>
+	<%= div_for comment do %>
+	<p>
+Posted <%= time_ago_inwords(comment.created_at) ago %>><br/>
+		<%= comment.body) %>
+	</p>
+	<% end %>
+<% end %>
+</div>
+
+
+<%= link_to 'Edit', edit_comment_path(@comment) %> |
+<%= link_to 'Back', comments_path %>

@@ -1,6 +1,19 @@
 Rails.application.routes.draw do
+  
+  get 'signup', to: 'users#new'
+  resources :users, except: [:new]  # or post 'users', to: 'users#create'
+
+  resources :articles do
+    resources :comments
+   end
+
 
  # get 'pages/home'
+get 'login', to: 'sessions#new'
+post 'login', to: 'sessions#create'
+delete 'logout', to: 'sessions#destroy'
+
+resources :categories, except: [:destroy]
 
  # get 'pages/about'
 
@@ -41,8 +54,7 @@ get 'pages/about', to: 'pages#about'
 
   # Example resource route with more complex sub-resources:
   #   resources :products do
-  #     resources :comments
-  #     resources :sales do
+  #     #     resources :sales do
   #       get 'recent', on: :collection
   #     end
   #   end
