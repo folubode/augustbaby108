@@ -1,24 +1,32 @@
-<%= render 'shared/errors', obj: @comment %>
+<%#= render 'shared/errors', obj: @comment %>
 
-<%= form_for([@article, @article.comments.build], :html => {remote: true, class: "form-horizontal", role: "form"}) do |f| %>
+<p id="notice"><%= notice %></p>
+
+<%= form_for([@article, @comment], remote: true) do |f| %>
+
+<%= f.hidden_field :article_id %>
+
   <div class="form-group">
     <div class="control-label col-sm-2">
-      <%= f.label :body %>
+      <h4>Comment</h4>
     </div>
-  
   <div class="col-sm-8">
-    <%= f.text_field :body, class: "form-control", placeholder: "Enter your comment here", autofocus: true %>
-  </div>
-</div>
+    <%= f.text_area :body, class: "form-control", placeholder: "Enter your comment here", autofocus: true %>
+  </div><br> <br>
 
-<div class="form-group">
   <div class="col-sm-offset-2 col-sm-10">
-    <%= f.submit class: 'btn btn-primary btn-lg' %>
+    <%= f.submit "Submit", id: "zero_margin" , class: 'btn btn-primary' %>
   </div>
 </div>
-
 <% end %>
 
+<% unless current_user == nil %>
+  <% if current_user.id == @article.user_id %>
+    <%= link_to 'Edit', edit_article_path(@article) %> |
+  <% end %>
+<% end %>
+
+
 <div class="col-xs-4 col-xs-offset-4">
-[ <%= link_to "Cancel & Return to Articles", articles_path %> ]
+[ <%= link_to "Return to Articles", articles_path %> ]
 </div>

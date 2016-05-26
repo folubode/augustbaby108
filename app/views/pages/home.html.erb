@@ -3,4 +3,9 @@
 <p><h3>Being of a minor, I never thought I could get to do social media, but thanks to my "allowing watchdog" dad. So this blog has a purpose: to share with you ideas that are important to minor age</h3></p>
 
 <p><%= link_to "Sign Up Now", signup_path,  class: "btn btn-primary btn-lg" %></p>
+
 </div>
+
+<%= @articles.each do |article| %>
+	<%= render 'articles/author', article: article %>
+<% end %>

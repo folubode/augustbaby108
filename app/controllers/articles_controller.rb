@@ -3,27 +3,36 @@ before_action :set_article, only: [:edit, :update, :show, :destroy]
 before_action :require_user, except: [:index, :show]
 before_action :require_same_user, only: [:edit, :update, :destroy]
 
+respond_to :html, :js
+  
 	def index
 		@articles = Article.paginate(page: params[:page], per_page: 5)
 	end
 
+
+	def show
+		@comment = @article.comments.build
+	end
+
 	def new
-		@article = Article.new
+		@article = Article.new(params[:article])
 	end
 
 	def edit
-		@article = Article.find params[:id]
 	end
 
-	def create
-		@article = Article.new(article_params)
-		@article.user = current_user
-			if @article.save
-				flash[:success] = "Article was successfully created"
-				redirect_to article_path(@article)
-			else
-				render 'new'
-			end
+	def create		
+		@article = current_user.articles.new(article_params)
+
+    respond_to do |format|
+      if @article.save
+        format.html { redirect_to article_path(@article), notice: 'Post was successfully created.' }
+        format.json { render action: 'show', status: :created, location: @article }
+      else
+        format.html { render action: 'new' }
+        format.json { render json: @article.errors, status: :unprocessable_entity }
+      end
+    end
 	end
 
 	def update
@@ -40,12 +49,6 @@ before_action :require_same_user, only: [:edit, :update, :destroy]
 
 	end
 
-	def show
-		@comment = Comment.new
-		#displaying the form to add a comment in the articles/show.html.erb, so @comment need to defined in articles#show action
-		@article = Article.find_or_create_by(params[:id])
-		@user = User.find_or_create_by(params[:id])  
-	end
 
 	def destroy
 
@@ -53,7 +56,7 @@ before_action :require_same_user, only: [:edit, :update, :destroy]
 
 	flash[:danger] = "Article was successfully deleted"
 
-	redirect_to articles_path
+	redirect_to articles_url
 
 	end
 
@@ -61,7 +64,7 @@ before_action :require_same_user, only: [:edit, :update, :destroy]
 	private
 
 		def set_article
-		@article = Article.find(params[:id])
+			@article = Article.find(params[:id])
 		end
 
 		def article_params
